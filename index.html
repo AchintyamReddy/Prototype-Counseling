@@ -38,6 +38,8 @@
         <nav class="main-nav">
             <button class="nav-btn active" data-tab="home">Home</button>
             <button class="nav-btn" data-tab="counselors">Counselors</button>
+            <button class="nav-btn" data-tab="exercises">Exercises</button>
+            <button class="nav-btn" data-tab="ai-assistant">Wellness AI</button>
             <button class="nav-btn" data-tab="schedule">Schedule</button>
         </nav>
 
@@ -46,6 +48,19 @@
             <!-- Home Tab -->
             <section id="home-tab" class="tab active">
                 <div class="dashboard-grid">
+                    <!-- Daily Quote Widget -->
+                    <div class="widget quote-widget">
+                        <div class="quote-header">
+                            <h3>Daily Inspiration</h3>
+                            <button id="new-quote-btn" class="icon-btn">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="quote-content">
+                            <p id="daily-quote">"The greatest glory in living lies not in never falling, but in rising every time we fall." - Nelson Mandela</p>
+                        </div>
+                    </div>
+
                     <!-- Student Profile Widget -->
                     <div class="widget profile-widget">
                         <div class="profile-header">
@@ -65,8 +80,8 @@
                                 <span class="stat-value">2</span>
                             </div>
                             <div class="stat">
-                                <span class="stat-label">Wellness Score</span>
-                                <span class="stat-value">85%</span>
+                                <span class="stat-label">Completed Exercises</span>
+                                <span class="stat-value">12</span>
                             </div>
                         </div>
                         <div class="profile-actions">
@@ -171,6 +186,83 @@
                 </div>
             </section>
 
+            <!-- Exercises Tab -->
+            <section id="exercises-tab" class="tab">
+                <div class="exercises-container">
+                    <div class="exercises-header">
+                        <h2>Wellness Exercises</h2>
+                        <p>Recommended by your counselors to help you manage stress and improve well-being</p>
+                    </div>
+                    
+                    <div class="exercises-grid">
+                        <!-- Exercises will be populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Wellness AI Assistant Tab -->
+            <section id="ai-assistant-tab" class="tab">
+                <div class="ai-assistant-container">
+                    <div class="chat-sidebar">
+                        <div class="sidebar-header">
+                            <h3>Conversations</h3>
+                            <button class="btn small primary" id="new-chat-btn">
+                                <i class="fas fa-plus"></i> New Chat
+                            </button>
+                        </div>
+                        
+                        <div class="chat-categories">
+                            <button class="category-btn active" data-category="recent">
+                                <i class="fas fa-clock"></i> Recent
+                            </button>
+                            <button class="category-btn" data-category="achieved">
+                                <i class="fas fa-trophy"></i> Achieved
+                            </button>
+                            <button class="category-btn" data-category="deleted">
+                                <i class="fas fa-trash"></i> Deleted
+                            </button>
+                        </div>
+                        
+                        <div class="chat-list" id="chat-list">
+                            <!-- Chat history will be populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="chat-main">
+                        <div class="chat-header">
+                            <div class="ai-info">
+                                <div class="ai-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div>
+                                    <h3>Wellness AI Assistant</h3>
+                                    <p>Your personal wellness companion</p>
+                                </div>
+                            </div>
+                            <div class="chat-actions">
+                                <button class="icon-btn" title="Save conversation">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <button class="icon-btn" title="Delete conversation">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-messages" id="chat-messages">
+                            <!-- Messages will be populated by JS -->
+                        </div>
+                        
+                        <div class="chat-input">
+                            <textarea id="message-input" placeholder="How can I help you today?"></textarea>
+                            <button class="btn primary" id="send-message-btn">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Schedule Tab -->
             <section id="schedule-tab" class="tab">
                 <div class="schedule-container">
@@ -257,6 +349,12 @@
                             </div>
                         </div>
                         <p id="modal-counselor-bio"></p>
+                        <div class="counselor-exercises">
+                            <h4>Recommended Exercises</h4>
+                            <div class="exercises-preview" id="modal-exercises">
+                                <!-- Exercises will be populated by JS -->
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-actions">
