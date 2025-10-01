@@ -342,6 +342,46 @@ body {
     margin-top: auto;
 }
 
+/* Notifications Widget - Positioned below profile */
+.notifications-widget {
+    grid-column: 1 / 2;
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notification-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: var(--light);
+    border-radius: var(--radius);
+    transition: var(--transition);
+}
+
+.notification-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.notification-item i {
+    font-size: 1.2rem;
+    color: var(--primary);
+    min-width: 24px;
+}
+
+.notification-content p {
+    margin-bottom: 5px;
+}
+
+.notification-time {
+    font-size: 0.85rem;
+    color: var(--gray);
+}
+
 /* Calendar Widget */
 .calendar-widget {
     grid-column: 2 / 3;
@@ -434,46 +474,6 @@ body {
 
 .event-details h5 {
     margin-bottom: 5px;
-}
-
-/* Notifications Widget */
-.notifications-widget {
-    grid-column: 1 / 2;
-}
-
-.notifications-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.notification-item {
-    display: flex;
-    gap: 12px;
-    padding: 12px;
-    background: var(--light);
-    border-radius: var(--radius);
-    transition: var(--transition);
-}
-
-.notification-item:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
-}
-
-.notification-item i {
-    font-size: 1.2rem;
-    color: var(--primary);
-    min-width: 24px;
-}
-
-.notification-content p {
-    margin-bottom: 5px;
-}
-
-.notification-time {
-    font-size: 0.85rem;
-    color: var(--gray);
 }
 
 /* Counselors Tab */
@@ -621,6 +621,30 @@ body {
 .exercise-body p {
     margin-bottom: 15px;
     color: var(--gray);
+}
+
+.exercise-attachments {
+    margin: 15px 0;
+    padding: 10px;
+    background: var(--light);
+    border-radius: var(--radius);
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    color: var(--primary);
+}
+
+.attachment-item i {
+    font-size: 1.2rem;
+}
+
+.attachment-item:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .exercise-footer {
@@ -1105,7 +1129,7 @@ body {
     text-align: center;
 }
 
-/* Responsive Design */
+/* Responsive Design for AI Assistant */
 @media (max-width: 1200px) {
     .ai-assistant-container {
         flex-direction: column;
@@ -1115,6 +1139,10 @@ body {
     .chat-sidebar {
         width: 100%;
         max-height: 300px;
+    }
+    
+    .chat-main {
+        min-height: 400px;
     }
 }
 
@@ -1129,6 +1157,41 @@ body {
     
     .schedule-content {
         grid-template-columns: 1fr;
+    }
+    
+    /* Enhanced AI Assistant Mobile */
+    .chat-messages {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .message {
+        max-width: 90%;
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+    
+    .chat-input {
+        padding: 15px;
+    }
+    
+    .chat-input textarea {
+        min-height: 45px;
+        font-size: 1rem;
+    }
+    
+    .chat-header {
+        padding: 15px;
+    }
+    
+    .ai-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .chat-header h3 {
+        font-size: 1.2rem;
     }
 }
 
@@ -1163,5 +1226,37 @@ body {
     
     .chat-input button {
         align-self: flex-end;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .sidebar-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .chat-categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        padding: 10px 0;
+    }
+    
+    .category-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .chat-item {
+        padding: 10px 15px;
+    }
+    
+    .chat-item-title {
+        font-size: 0.9rem;
+    }
+    
+    .chat-item-time {
+        font-size: 0.75rem;
     }
 }
