@@ -90,7 +90,12 @@ const exercises = [
         description: "A simple breathing technique to calm your nervous system and reduce anxiety in just 5 minutes.",
         duration: "5 min",
         counselorId: 1,
-        type: "breathing"
+        type: "breathing",
+        attachments: [
+            { name: "Breathing Guide.pdf", url: "#" },
+            { name: "Audio Meditation.mp3", url: "#" },
+            { name: "Visual Guide.png", url: "#" }
+        ]
     },
     {
         id: 2,
@@ -98,7 +103,11 @@ const exercises = [
         description: "Systematically tense and relax different muscle groups to release physical tension and stress.",
         duration: "10 min",
         counselorId: 2,
-        type: "relaxation"
+        type: "relaxation",
+        attachments: [
+            { name: "PMR Instructions.pdf", url: "#" },
+            { name: "Guided Audio.mp3", url: "#" }
+        ]
     },
     {
         id: 3,
@@ -106,7 +115,11 @@ const exercises = [
         description: "Transform your daily walk into a mindfulness practice to ground yourself in the present moment.",
         duration: "15 min",
         counselorId: 1,
-        type: "mindfulness"
+        type: "mindfulness",
+        attachments: [
+            { name: "Walking Meditation Guide.pdf", url: "#" },
+            { name: "Nature Sounds.mp3", url: "#" }
+        ]
     },
     {
         id: 4,
@@ -114,7 +127,11 @@ const exercises = [
         description: "Write down three things you're grateful for each day to shift your focus to the positive.",
         duration: "5 min",
         counselorId: 2,
-        type: "journaling"
+        type: "journaling",
+        attachments: [
+            { name: "Journal Template.pdf", url: "#" },
+            { name: "Prompt Ideas.docx", url: "#" }
+        ]
     },
     {
         id: 5,
@@ -122,7 +139,12 @@ const exercises = [
         description: "A guided meditation that brings awareness to different parts of your body to release tension.",
         duration: "20 min",
         counselorId: 1,
-        type: "meditation"
+        type: "meditation",
+        attachments: [
+            { name: "Body Scan Script.pdf", url: "#" },
+            { name: "Full Meditation.mp3", url: "#" },
+            { name: "Quick Version.mp3", url: "#" }
+        ]
     },
     {
         id: 6,
@@ -130,7 +152,11 @@ const exercises = [
         description: "Organize your tasks using the Eisenhower Matrix to prioritize effectively and reduce overwhelm.",
         duration: "10 min",
         counselorId: 2,
-        type: "planning"
+        type: "planning",
+        attachments: [
+            { name: "Matrix Template.xlsx", url: "#" },
+            { name: "How-To Guide.pdf", url: "#" }
+        ]
     },
     {
         id: 7,
@@ -138,7 +164,11 @@ const exercises = [
         description: "A short practice to offer yourself kindness during difficult moments.",
         duration: "5 min",
         counselorId: 3,
-        type: "self-care"
+        type: "self-care",
+        attachments: [
+            { name: "Self-Compassion Exercises.pdf", url: "#" },
+            { name: "Affirmation Cards.pdf", url: "#" }
+        ]
     },
     {
         id: 8,
@@ -146,7 +176,11 @@ const exercises = [
         description: "Repeat empowering statements to challenge negative thoughts and build self-confidence.",
         duration: "5 min",
         counselorId: 4,
-        type: "affirmations"
+        type: "affirmations",
+        attachments: [
+            { name: "Affirmation List.pdf", url: "#" },
+            { name: "Daily Practice Guide.pdf", url: "#" }
+        ]
     }
 ];
 
@@ -217,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up daily quote
     setRandomQuote();
     
-    // Populate exercises
+    // Populate exercises with attachments
     renderExercises();
     
     // Set up AI assistant
@@ -409,6 +443,22 @@ function renderExercises() {
         const counselor = counselors.find(c => c.id === exercise.counselorId);
         const counselorName = counselor ? counselor.name : "Wellness Team";
         
+        // Create attachments HTML
+        let attachmentsHTML = '';
+        if (exercise.attachments && exercise.attachments.length > 0) {
+            attachmentsHTML = `
+                <div class="exercise-attachments">
+                    <h5>Resources:</h5>
+                    ${exercise.attachments.map(att => `
+                        <div class="attachment-item" data-url="${att.url}">
+                            <i class="fas fa-file-alt"></i>
+                            <span>${att.name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
         card.innerHTML = `
             <div class="exercise-header">
                 <h4>${exercise.title}</h4>
@@ -416,6 +466,7 @@ function renderExercises() {
             </div>
             <div class="exercise-body">
                 <p>${exercise.description}</p>
+                ${attachmentsHTML}
             </div>
             <div class="exercise-footer">
                 <div class="exercise-duration">
@@ -428,6 +479,15 @@ function renderExercises() {
                 </div>
             </div>
         `;
+        
+        // Add event listeners to attachments
+        card.querySelectorAll('.attachment-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const url = e.currentTarget.dataset.url;
+                // In a real app, this would open/download the file
+                showNotification(`Opening ${e.currentTarget.querySelector('span').textContent}`, "success");
+            });
+        });
         
         exercisesGrid.appendChild(card);
     });
