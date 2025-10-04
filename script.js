@@ -25,6 +25,7 @@ const messageInput = document.getElementById('message-input');
 const sendMessageBtn = document.getElementById('send-message-btn');
 const newChatBtn = document.getElementById('new-chat-btn');
 const categoryBtns = document.querySelectorAll('.category-btn');
+const srAnnouncement = document.getElementById('sr-announcement');
 
 // Sample Data
 const quotes = [
@@ -263,6 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Show initial notification
     showNotification("Welcome to Clear Mind! Your appointment with Dr. Miller is confirmed for Oct 15 at 10:00 AM", "success");
+    
+    // Accessibility: Announce page load
+    announceToScreenReader("Clear Mind app loaded. Home dashboard is active.");
 });
 
 // Navigation Functions
@@ -272,8 +276,12 @@ function setupNavigation() {
             const tabId = btn.dataset.tab;
             
             // Update active nav button
-            navBtns.forEach(b => b.classList.remove('active'));
+            navBtns.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
             btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
             
             // Show active tab
             tabs.forEach(tab => {
@@ -282,6 +290,9 @@ function setupNavigation() {
                     tab.classList.add('active');
                 }
             });
+            
+            // Announce tab change to screen readers
+            announceToScreenReader(`${tabId.charAt(0).toUpperCase() + tabId.slice(1)} tab is now active.`);
         });
     });
 }
@@ -294,25 +305,35 @@ function renderCounselors() {
         const card = document.createElement('div');
         card.className = 'counselor-card';
         card.dataset.id = counselor.id;
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', `${counselor.name}, ${counselor.specialization}`);
         
         const availabilityClass = counselor.available ? 'available' : 'unavailable';
         const availabilityText = counselor.available ? 'Available Today' : 'Unavailable';
         
         card.innerHTML = `
             <div class="counselor-header">
-                <img src="${counselor.image}" alt="${counselor.name}">
+                <img src="${counselor.image}" alt="${counselor.name}" loading="lazy">
                 <h4>${counselor.name}</h4>
             </div>
             <div class="counselor-body">
                 <p>${counselor.specialization}</p>
                 <div class="counselor-availability">
-                    <span class="status-indicator ${availabilityClass}"></span>
+                    <span class="status-indicator ${availabilityClass}" aria-label="${availabilityText}"></span>
                     <span>${availabilityText}</span>
                 </div>
             </div>
         `;
         
         card.addEventListener('click', () => openCounselorModal(counselor));
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openCounselorModal(counselor);
+            }
+        });
+        
         counselorsGrid.appendChild(card);
     });
 }
@@ -331,6 +352,7 @@ function openCounselorModal(counselor) {
             const tag = document.createElement('span');
             tag.className = 'exercise-tag';
             tag.textContent = exercise.title;
+            tag.setAttribute('role', 'listitem');
             modalExercises.appendChild(tag);
         }
     });
@@ -363,6 +385,10 @@ function openCounselorModal(counselor) {
     }
     
     counselorModal.classList.add('show');
+    modalCounselorImg.focus();
+    
+    // Announce modal open
+    announceToScreenReader(`Counselor details for ${counselor.name} opened.`);
 }
 
 // Calendar Functions
@@ -390,6 +416,8 @@ function generateCalendar() {
         day.className = 'calendar-day';
         day.textContent = prevMonthLastDay - i;
         day.style.color = '#ccc';
+        day.setAttribute('aria-label', `Previous month, day ${prevMonthLastDay - i}`);
+        day.setAttribute('tabindex', '-1');
         calendarGrid.appendChild(day);
     }
     
@@ -398,16 +426,29 @@ function generateCalendar() {
         const dayElement = document.createElement('div');
         dayElement.className = 'calendar-day';
         dayElement.textContent = day;
+        dayElement.setAttribute('role', 'button');
+        dayElement.setAttribute('tabindex', '0');
+        dayElement.setAttribute('aria-label', `Day ${day} of ${new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })} ${currentYear}`);
         
         // Highlight today
         if (day === today.getDate() && currentMonth === today.getMonth()) {
             dayElement.classList.add('today');
+            dayElement.setAttribute('aria-label', `Today, day ${day} of ${new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })} ${currentYear}`);
         }
         
         // Add event indicator for days with appointments
         if (day === 15 || day === 16) {
             dayElement.classList.add('has-event');
+            dayElement.setAttribute('aria-label', `Day ${day} has appointments`);
         }
+        
+        dayElement.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                // In a real app, this would show events for the day
+                showNotification(`Events for day ${day}`, "success");
+            }
+        });
         
         calendarGrid.appendChild(dayElement);
     }
@@ -422,6 +463,8 @@ function generateCalendar() {
         dayElement.className = 'calendar-day';
         dayElement.textContent = day;
         dayElement.style.color = '#ccc';
+        dayElement.setAttribute('aria-label', `Next month, day ${day}`);
+        dayElement.setAttribute('tabindex', '-1');
         calendarGrid.appendChild(dayElement);
     }
 }
@@ -430,6 +473,7 @@ function generateCalendar() {
 function setRandomQuote() {
     const randomIndex = Math.floor(Math.random() * quotes.length);
     dailyQuote.textContent = quotes[randomIndex];
+    announceToScreenReader("New daily inspiration quote loaded.");
 }
 
 // Exercises Functions
@@ -439,6 +483,8 @@ function renderExercises() {
     exercises.forEach(exercise => {
         const card = document.createElement('div');
         card.className = 'exercise-card';
+        card.setAttribute('role', 'article');
+        card.setAttribute('aria-label', exercise.title);
         
         const counselor = counselors.find(c => c.id === exercise.counselorId);
         const counselorName = counselor ? counselor.name : "Wellness Team";
@@ -447,11 +493,11 @@ function renderExercises() {
         let attachmentsHTML = '';
         if (exercise.attachments && exercise.attachments.length > 0) {
             attachmentsHTML = `
-                <div class="exercise-attachments">
+                <div class="exercise-attachments" role="group" aria-label="Exercise resources">
                     <h5>Resources:</h5>
                     ${exercise.attachments.map(att => `
-                        <div class="attachment-item" data-url="${att.url}">
-                            <i class="fas fa-file-alt"></i>
+                        <div class="attachment-item" data-url="${att.url}" role="button" tabindex="0" aria-label="Open ${att.name}">
+                            <i class="fas fa-file-alt" aria-hidden="true"></i>
                             <span>${att.name}</span>
                         </div>
                     `).join('')}
@@ -470,12 +516,12 @@ function renderExercises() {
             </div>
             <div class="exercise-footer">
                 <div class="exercise-duration">
-                    <i class="fas fa-clock"></i>
+                    <i class="fas fa-clock" aria-hidden="true"></i>
                     <span>${exercise.duration}</span>
                 </div>
                 <div class="exercise-actions">
-                    <button class="btn secondary">Try Now</button>
-                    <button class="btn primary">Save</button>
+                    <button class="btn secondary" aria-label="Try ${exercise.title} now">Try Now</button>
+                    <button class="btn primary" aria-label="Save ${exercise.title} to your library">Save</button>
                 </div>
             </div>
         `;
@@ -484,8 +530,19 @@ function renderExercises() {
         card.querySelectorAll('.attachment-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 const url = e.currentTarget.dataset.url;
+                const fileName = e.currentTarget.querySelector('span').textContent;
                 // In a real app, this would open/download the file
-                showNotification(`Opening ${e.currentTarget.querySelector('span').textContent}`, "success");
+                showNotification(`Opening ${fileName}`, "success");
+                announceToScreenReader(`Opening ${fileName}`);
+            });
+            
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const fileName = e.currentTarget.querySelector('span').textContent;
+                    showNotification(`Opening ${fileName}`, "success");
+                    announceToScreenReader(`Opening ${fileName}`);
+                }
             });
         });
         
@@ -507,9 +564,12 @@ function renderChatList() {
         const chatItem = document.createElement('div');
         chatItem.className = `chat-item ${chat.id === currentChatId ? 'active' : ''}`;
         chatItem.dataset.id = chat.id;
+        chatItem.setAttribute('role', 'button');
+        chatItem.setAttribute('tabindex', '0');
+        chatItem.setAttribute('aria-label', `${chat.title}, last message: ${chat.lastMessage}`);
         
         chatItem.innerHTML = `
-            <img src="https://ui-avatars.com/api/?name=AI+Assistant&background=0d9488&color=fff" alt="AI Assistant">
+            <img src="https://ui-avatars.com/api/?name=AI+Assistant&background=0d9488&color=fff" alt="AI Assistant" loading="lazy">
             <div class="chat-item-info">
                 <div class="chat-item-title">${chat.title}</div>
                 <div class="chat-item-time">${chat.time}</div>
@@ -517,19 +577,37 @@ function renderChatList() {
         `;
         
         chatItem.addEventListener('click', () => {
-            // Update active chat
-            document.querySelectorAll('.chat-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            chatItem.classList.add('active');
-            
-            // Load chat
-            currentChatId = chat.id;
-            loadChat(chat.id);
+            selectChat(chat.id);
+        });
+        
+        chatItem.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                selectChat(chat.id);
+            }
         });
         
         chatList.appendChild(chatItem);
     });
+}
+
+function selectChat(chatId) {
+    // Update active chat
+    document.querySelectorAll('.chat-item').forEach(item => {
+        item.classList.remove('active');
+        item.setAttribute('aria-selected', 'false');
+    });
+    
+    const selectedChatItem = document.querySelector(`.chat-item[data-id="${chatId}"]`);
+    if (selectedChatItem) {
+        selectedChatItem.classList.add('active');
+        selectedChatItem.setAttribute('aria-selected', 'true');
+    }
+    
+    // Load chat
+    currentChatId = chatId;
+    loadChat(chatId);
+    announceToScreenReader(`Chat ${chatId} loaded. ${chatHistory.find(c => c.id === chatId)?.title}`);
 }
 
 function loadChat(chatId) {
@@ -542,6 +620,8 @@ function loadChat(chatId) {
         const messageEl = document.createElement('div');
         messageEl.className = `message ${message.sender}`;
         messageEl.textContent = message.text;
+        messageEl.setAttribute('role', 'listitem');
+        messageEl.setAttribute('aria-label', `${message.sender === 'user' ? 'You' : 'AI Assistant'}: ${message.text}`);
         chatMessages.appendChild(messageEl);
     });
     
@@ -569,10 +649,17 @@ function addMessage(sender, text) {
     const messageEl = document.createElement('div');
     messageEl.className = `message ${sender}`;
     messageEl.textContent = text;
+    messageEl.setAttribute('role', 'listitem');
+    messageEl.setAttribute('aria-label', `${sender === 'user' ? 'You' : 'AI Assistant'}: ${text}`);
     chatMessages.appendChild(messageEl);
     
     // Scroll to bottom
     chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    // Announce new message to screen readers
+    if (sender === 'ai') {
+        announceToScreenReader(`AI Assistant: ${text}`);
+    }
 }
 
 // Notification Functions
@@ -591,20 +678,52 @@ function hideNotification() {
     notificationBar.classList.remove('show');
 }
 
+// Screen Reader Announcement
+function announceToScreenReader(message) {
+    srAnnouncement.textContent = message;
+    setTimeout(() => {
+        srAnnouncement.textContent = '';
+    }, 1000);
+}
+
 // Event Listeners
 function setupEventListeners() {
     // Close notification
     closeNotification.addEventListener('click', hideNotification);
+    closeNotification.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            hideNotification();
+        }
+    });
     
     // Close modal
     closeModal.addEventListener('click', () => {
         counselorModal.classList.remove('show');
+        document.querySelector('.nav-btn.active').focus();
+    });
+    
+    closeModal.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            counselorModal.classList.remove('show');
+            document.querySelector('.nav-btn.active').focus();
+        }
     });
     
     // Close modal when clicking outside
     counselorModal.addEventListener('click', (e) => {
         if (e.target === counselorModal) {
             counselorModal.classList.remove('show');
+            document.querySelector('.nav-btn.active').focus();
+        }
+    });
+    
+    // Escape key to close modal
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && counselorModal.classList.contains('show')) {
+            counselorModal.classList.remove('show');
+            document.querySelector('.nav-btn.active').focus();
         }
     });
     
@@ -628,6 +747,19 @@ function setupEventListeners() {
         slot.addEventListener('click', () => {
             timeSlots.forEach(s => s.classList.remove('selected'));
             slot.classList.add('selected');
+            slot.setAttribute('aria-selected', 'true');
+        });
+        
+        slot.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                timeSlots.forEach(s => {
+                    s.classList.remove('selected');
+                    s.setAttribute('aria-selected', 'false');
+                });
+                slot.classList.add('selected');
+                slot.setAttribute('aria-selected', 'true');
+            }
         });
     });
     
@@ -636,18 +768,21 @@ function setupEventListeners() {
         const reason = document.getElementById('appointment-reason').value;
         if (!reason.trim()) {
             showNotification("Please provide a reason for your appointment", "error");
+            document.getElementById('appointment-reason').focus();
             return;
         }
         
         const selectedSlot = document.querySelector('.time-slot.selected');
         if (!selectedSlot) {
             showNotification("Please select a time slot", "error");
+            document.querySelector('.time-slot').focus();
             return;
         }
         
         showNotification(`Appointment scheduled for ${selectedSlot.textContent}! Confirmation email sent.`, "success");
         document.getElementById('appointment-reason').value = '';
         timeSlots.forEach(s => s.classList.remove('selected'));
+        announceToScreenReader("Appointment successfully scheduled.");
     });
     
     // Notification bell
@@ -657,9 +792,22 @@ function setupEventListeners() {
     
     // New quote button
     newQuoteBtn.addEventListener('click', setRandomQuote);
+    newQuoteBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setRandomQuote();
+        }
+    });
     
     // AI Assistant
     sendMessageBtn.addEventListener('click', sendMessage);
+    sendMessageBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    
     messageInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -669,13 +817,38 @@ function setupEventListeners() {
     
     // New chat button
     newChatBtn.addEventListener('click', createNewChat);
+    newChatBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            createNewChat();
+        }
+    });
     
     // Category buttons
     categoryBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            categoryBtns.forEach(b => b.classList.remove('active'));
+            categoryBtns.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
             btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
             renderChatList();
+            announceToScreenReader(`${btn.textContent.trim()} conversations loaded.`);
+        });
+        
+        btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                categoryBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
+                btn.classList.add('active');
+                btn.setAttribute('aria-selected', 'true');
+                renderChatList();
+                announceToScreenReader(`${btn.textContent.trim()} conversations loaded.`);
+            }
         });
     });
 }
@@ -683,11 +856,15 @@ function setupEventListeners() {
 // AI Assistant Message Handling
 function sendMessage() {
     const message = messageInput.value.trim();
-    if (!message) return;
+    if (!message) {
+        showNotification("Please enter a message", "error");
+        return;
+    }
     
     // Add user message
     addMessage('user', message);
     messageInput.value = '';
+    messageInput.focus();
     
     // Simulate AI response after a delay
     setTimeout(() => {
@@ -728,6 +905,8 @@ function createNewChat() {
     currentChatId = newChat.id;
     renderChatList();
     loadChat(newChat.id);
+    messageInput.focus();
+    announceToScreenReader("New chat started with AI Assistant.");
 }
 
 // Simulate new notifications
