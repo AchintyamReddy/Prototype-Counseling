@@ -9,34 +9,36 @@
 </head>
 <body>
     <!-- Notification Bar -->
-    <div id="notification-bar" class="notification-bar hidden">
+    <div id="notification-bar" class="notification-bar hidden" role="alert" aria-live="polite">
         <span id="notification-message"></span>
-        <button id="close-notification" class="close-btn">&times;</button>
+        <button id="close-notification" class="close-btn" aria-label="Close notification">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
     </div>
 
     <!-- Main App Container -->
     <div class="app-container">
         <!-- Header -->
-        <header class="app-header">
+        <header class="app-header" role="banner">
             <div class="logo">
-                <i class="fas fa-brain"></i>
+                <i class="fas fa-brain" aria-hidden="true"></i>
                 <h1>Clear Mind</h1>
             </div>
             <p class="motto">Connect, Support, Succeed</p>
             <div class="user-actions">
-                <button id="notifications-btn" class="icon-btn">
-                    <i class="fas fa-bell"></i>
-                    <span id="notification-count" class="notification-badge">3</span>
+                <button id="notifications-btn" class="icon-btn" aria-label="Notifications">
+                    <i class="fas fa-bell" aria-hidden="true"></i>
+                    <span id="notification-count" class="notification-badge" aria-label="3 new notifications">3</span>
                 </button>
-                <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=Alex+Johnson&background=random" alt="User Profile">
+                <div class="user-profile" aria-label="User profile">
+                    <img src="https://ui-avatars.com/api/?name=Alex+Johnson&background=random" alt="Alex Johnson profile" loading="lazy">
                 </div>
             </div>
         </header>
 
         <!-- Navigation Tabs -->
-        <nav class="main-nav">
-            <button class="nav-btn active" data-tab="home">Home</button>
+        <nav class="main-nav" role="navigation" aria-label="Main navigation">
+            <button class="nav-btn active" data-tab="home" aria-selected="true">Home</button>
             <button class="nav-btn" data-tab="counselors">Counselors</button>
             <button class="nav-btn" data-tab="exercises">Exercises</button>
             <button class="nav-btn" data-tab="ai-assistant">Wellness AI</button>
@@ -44,16 +46,17 @@
         </nav>
 
         <!-- Tab Content -->
-        <main class="tab-content">
+        <main class="tab-content" role="main">
             <!-- Home Tab -->
-            <section id="home-tab" class="tab active">
+            <section id="home-tab" class="tab active" aria-labelledby="home-tab-label">
+                <h2 id="home-tab-label" class="sr-only">Home Dashboard</h2>
                 <div class="dashboard-grid">
                     <!-- Daily Quote Widget -->
                     <div class="widget quote-widget">
                         <div class="quote-header">
                             <h3>Daily Inspiration</h3>
-                            <button id="new-quote-btn" class="icon-btn">
-                                <i class="fas fa-sync-alt"></i>
+                            <button id="new-quote-btn" class="icon-btn" aria-label="Get new quote">
+                                <i class="fas fa-sync-alt" aria-hidden="true"></i>
                             </button>
                         </div>
                         <div class="quote-content">
@@ -61,63 +64,66 @@
                         </div>
                     </div>
 
-                    <!-- Student Profile Widget -->
-                    <div class="widget profile-widget">
-                        <div class="profile-header">
-                            <img src="https://ui-avatars.com/api/?name=Alex+Johnson&background=random" alt="Student Profile">
-                            <div class="profile-info">
-                                <h2>Alex Johnson</h2>
-                                <p>Computer Science, Junior</p>
-                                <div class="status">
-                                    <span class="status-indicator online"></span>
-                                    <span>Online</span>
+                    <!-- Compact Profile & Notifications Section -->
+                    <div class="compact-section">
+                        <!-- Student Profile Widget -->
+                        <div class="widget profile-widget">
+                            <div class="profile-header">
+                                <img src="https://ui-avatars.com/api/?name=Alex+Johnson&background=random" alt="Student Profile" loading="lazy">
+                                <div class="profile-info">
+                                    <h2>Alex Johnson</h2>
+                                    <p>Computer Science, Junior</p>
+                                    <div class="status">
+                                        <span class="status-indicator online" aria-label="Online"></span>
+                                        <span>Online</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="profile-stats">
-                            <div class="stat">
-                                <span class="stat-label">Upcoming Sessions</span>
-                                <span class="stat-value">2</span>
+                            <div class="profile-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Upcoming Sessions</span>
+                                    <span class="stat-value">2</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Completed Exercises</span>
+                                    <span class="stat-value">12</span>
+                                </div>
                             </div>
-                            <div class="stat">
-                                <span class="stat-label">Completed Exercises</span>
-                                <span class="stat-value">12</span>
+                            <div class="profile-actions">
+                                <button class="btn primary">Update Profile</button>
+                                <button class="btn secondary">View History</button>
                             </div>
                         </div>
-                        <div class="profile-actions">
-                            <button class="btn primary">Update Profile</button>
-                            <button class="btn secondary">View History</button>
-                        </div>
-                    </div>
 
-                    <!-- Notifications Widget - Moved below profile -->
-                    <div class="widget notifications-widget">
-                        <div class="widget-header">
-                            <h3>Notifications</h3>
-                            <button class="icon-btn">
-                                <i class="fas fa-cog"></i>
-                            </button>
-                        </div>
-                        <div class="notifications-list">
-                            <div class="notification-item">
-                                <i class="fas fa-calendar-check"></i>
-                                <div class="notification-content">
-                                    <p>Your appointment with Dr. Miller is confirmed for Oct 15 at 10:00 AM</p>
-                                    <span class="notification-time">2 hours ago</span>
-                                </div>
+                        <!-- Notifications Widget - Now compact and adjacent -->
+                        <div class="widget notifications-widget compact">
+                            <div class="widget-header">
+                                <h3>Notifications</h3>
+                                <button class="icon-btn" aria-label="Notification settings">
+                                    <i class="fas fa-cog" aria-hidden="true"></i>
+                                </button>
                             </div>
-                            <div class="notification-item">
-                                <i class="fas fa-bullhorn"></i>
-                                <div class="notification-content">
-                                    <p>New workshop: "Mindfulness Techniques" available next week</p>
-                                    <span class="notification-time">1 day ago</span>
+                            <div class="notifications-list">
+                                <div class="notification-item">
+                                    <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                                    <div class="notification-content">
+                                        <p>Your appointment with Dr. Miller is confirmed for Oct 15 at 10:00 AM</p>
+                                        <span class="notification-time">2 hours ago</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="notification-item">
-                                <i class="fas fa-user-plus"></i>
-                                <div class="notification-content">
-                                    <p>You've been assigned to a new counselor: Dr. James Wilson</p>
-                                    <span class="notification-time">3 days ago</span>
+                                <div class="notification-item">
+                                    <i class="fas fa-bullhorn" aria-hidden="true"></i>
+                                    <div class="notification-content">
+                                        <p>New workshop: "Mindfulness Techniques" available next week</p>
+                                        <span class="notification-time">1 day ago</span>
+                                    </div>
+                                </div>
+                                <div class="notification-item">
+                                    <i class="fas fa-user-plus" aria-hidden="true"></i>
+                                    <div class="notification-content">
+                                        <p>You've been assigned to a new counselor: Dr. James Wilson</p>
+                                        <span class="notification-time">3 days ago</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -127,26 +133,30 @@
                     <div class="widget calendar-widget">
                         <div class="widget-header">
                             <h3>Upcoming Appointments</h3>
-                            <button class="icon-btn">
-                                <i class="fas fa-sync-alt"></i>
+                            <button class="icon-btn" aria-label="Refresh calendar">
+                                <i class="fas fa-sync-alt" aria-hidden="true"></i>
                             </button>
                         </div>
                         <div class="calendar-container">
                             <div class="calendar-header">
-                                <button class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                                <button class="nav-btn" aria-label="Previous month">
+                                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                                </button>
                                 <h4>October 2023</h4>
-                                <button class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                                <button class="nav-btn" aria-label="Next month">
+                                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                                </button>
                             </div>
-                            <div class="calendar-days">
-                                <div>Sun</div>
-                                <div>Mon</div>
-                                <div>Tue</div>
-                                <div>Wed</div>
-                                <div>Thu</div>
-                                <div>Fri</div>
-                                <div>Sat</div>
+                            <div class="calendar-days" role="row">
+                                <div role="columnheader">Sun</div>
+                                <div role="columnheader">Mon</div>
+                                <div role="columnheader">Tue</div>
+                                <div role="columnheader">Wed</div>
+                                <div role="columnheader">Thu</div>
+                                <div role="columnheader">Fri</div>
+                                <div role="columnheader">Sat</div>
                             </div>
-                            <div class="calendar-grid">
+                            <div class="calendar-grid" role="grid">
                                 <!-- Calendar days will be generated by JS -->
                             </div>
                         </div>
@@ -171,13 +181,14 @@
             </section>
 
             <!-- Counselors Tab -->
-            <section id="counselors-tab" class="tab">
+            <section id="counselors-tab" class="tab" aria-labelledby="counselors-tab-label">
+                <h2 id="counselors-tab-label" class="sr-only">Counselors Directory</h2>
                 <div class="widget counselors-list">
                     <div class="widget-header">
                         <h3>Available Counselors</h3>
                         <div class="search-box">
-                            <input type="text" placeholder="Search counselors...">
-                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search counselors..." aria-label="Search counselors">
+                            <i class="fas fa-search" aria-hidden="true"></i>
                         </div>
                     </div>
                     <div class="counselors-grid">
@@ -187,7 +198,8 @@
             </section>
 
             <!-- Exercises Tab -->
-            <section id="exercises-tab" class="tab">
+            <section id="exercises-tab" class="tab" aria-labelledby="exercises-tab-label">
+                <h2 id="exercises-tab-label" class="sr-only">Wellness Exercises</h2>
                 <div class="exercises-container">
                     <div class="exercises-header">
                         <h2>Wellness Exercises</h2>
@@ -201,38 +213,39 @@
             </section>
 
             <!-- Wellness AI Assistant Tab -->
-            <section id="ai-assistant-tab" class="tab">
+            <section id="ai-assistant-tab" class="tab" aria-labelledby="ai-assistant-tab-label">
+                <h2 id="ai-assistant-tab-label" class="sr-only">Wellness AI Assistant</h2>
                 <div class="ai-assistant-container">
-                    <div class="chat-sidebar">
+                    <div class="chat-sidebar" role="complementary">
                         <div class="sidebar-header">
                             <h3>Conversations</h3>
-                            <button class="btn small primary" id="new-chat-btn">
-                                <i class="fas fa-plus"></i> New Chat
+                            <button class="btn small primary" id="new-chat-btn" aria-label="Start new chat">
+                                <i class="fas fa-plus" aria-hidden="true"></i> New Chat
                             </button>
                         </div>
                         
-                        <div class="chat-categories">
-                            <button class="category-btn active" data-category="recent">
-                                <i class="fas fa-clock"></i> Recent
+                        <div class="chat-categories" role="tablist">
+                            <button class="category-btn active" data-category="recent" role="tab" aria-selected="true">
+                                <i class="fas fa-clock" aria-hidden="true"></i> Recent
                             </button>
-                            <button class="category-btn" data-category="achieved">
-                                <i class="fas fa-trophy"></i> Achieved
+                            <button class="category-btn" data-category="achieved" role="tab">
+                                <i class="fas fa-trophy" aria-hidden="true"></i> Achieved
                             </button>
-                            <button class="category-btn" data-category="deleted">
-                                <i class="fas fa-trash"></i> Deleted
+                            <button class="category-btn" data-category="deleted" role="tab">
+                                <i class="fas fa-trash" aria-hidden="true"></i> Deleted
                             </button>
                         </div>
                         
-                        <div class="chat-list" id="chat-list">
+                        <div class="chat-list" id="chat-list" role="tabpanel">
                             <!-- Chat history will be populated by JS -->
                         </div>
                     </div>
                     
-                    <div class="chat-main">
+                    <div class="chat-main" role="region" aria-label="Chat interface">
                         <div class="chat-header">
                             <div class="ai-info">
-                                <div class="ai-avatar">
-                                    <i class="fas fa-robot"></i>
+                                <div class="ai-avatar" aria-label="AI Assistant">
+                                    <i class="fas fa-robot" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <h3>Wellness AI Assistant</h3>
@@ -240,23 +253,23 @@
                                 </div>
                             </div>
                             <div class="chat-actions">
-                                <button class="icon-btn" title="Save conversation">
-                                    <i class="fas fa-save"></i>
+                                <button class="icon-btn" title="Save conversation" aria-label="Save conversation">
+                                    <i class="fas fa-save" aria-hidden="true"></i>
                                 </button>
-                                <button class="icon-btn" title="Delete conversation">
-                                    <i class="fas fa-trash"></i>
+                                <button class="icon-btn" title="Delete conversation" aria-label="Delete conversation">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
                         
-                        <div class="chat-messages" id="chat-messages">
+                        <div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
                             <!-- Messages will be populated by JS -->
                         </div>
                         
                         <div class="chat-input">
-                            <textarea id="message-input" placeholder="How can I help you today?"></textarea>
-                            <button class="btn primary" id="send-message-btn">
-                                <i class="fas fa-paper-plane"></i> Send
+                            <textarea id="message-input" placeholder="How can I help you today?" aria-label="Type your message"></textarea>
+                            <button class="btn primary" id="send-message-btn" aria-label="Send message">
+                                <i class="fas fa-paper-plane" aria-hidden="true"></i> Send
                             </button>
                         </div>
                     </div>
@@ -264,7 +277,8 @@
             </section>
 
             <!-- Schedule Tab -->
-            <section id="schedule-tab" class="tab">
+            <section id="schedule-tab" class="tab" aria-labelledby="schedule-tab-label">
+                <h2 id="schedule-tab-label" class="sr-only">Schedule Appointment</h2>
                 <div class="schedule-container">
                     <div class="schedule-header">
                         <h2>Schedule Appointment</h2>
@@ -275,12 +289,12 @@
                         <div class="counselor-selection">
                             <h3>Selected Counselor</h3>
                             <div class="selected-counselor">
-                                <img src="https://ui-avatars.com/api/?name=Sarah+Miller&background=2563eb&color=fff" alt="Counselor">
+                                <img src="https://ui-avatars.com/api/?name=Sarah+Miller&background=2563eb&color=fff" alt="Dr. Sarah Miller" loading="lazy">
                                 <div class="counselor-info">
                                     <h4>Dr. Sarah Miller</h4>
                                     <p>Specialization: Anxiety & Stress Management</p>
                                     <div class="availability">
-                                        <span class="status-indicator available"></span>
+                                        <span class="status-indicator available" aria-label="Available"></span>
                                         <span>Available Today</span>
                                     </div>
                                 </div>
@@ -303,11 +317,12 @@
                             <h3>Appointment Details</h3>
                             <div class="form-group">
                                 <label for="appointment-reason">Reason for Appointment</label>
-                                <textarea id="appointment-reason" placeholder="Briefly describe why you're scheduling this appointment"></textarea>
+                                <textarea id="appointment-reason" placeholder="Briefly describe why you're scheduling this appointment" aria-describedby="reason-help"></textarea>
+                                <p id="reason-help" class="help-text">This helps your counselor prepare for your session</p>
                             </div>
                             <div class="form-group">
                                 <label>
-                                    <input type="checkbox"> I agree to the terms and conditions
+                                    <input type="checkbox" aria-label="I agree to the terms and conditions"> I agree to the terms and conditions
                                 </label>
                             </div>
                             <button class="btn primary schedule-btn">Confirm Appointment</button>
@@ -319,22 +334,24 @@
     </div>
 
     <!-- Counselor Modal -->
-    <div id="counselor-modal" class="modal hidden">
+    <div id="counselor-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Counselor Details</h3>
-                <button id="close-modal" class="close-btn">&times;</button>
+                <h3 id="modal-title">Counselor Details</h3>
+                <button id="close-modal" class="close-btn" aria-label="Close modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="counselor-profile">
-                    <img src="" alt="Counselor" id="modal-counselor-img">
+                    <img src="" alt="Counselor" id="modal-counselor-img" loading="lazy">
                     <div class="counselor-info">
                         <h4 id="modal-counselor-name"></h4>
                         <p id="modal-counselor-specialization"></p>
                         <div class="counselor-stats">
                             <div class="stat">
                                 <span class="stat-label">Rating</span>
-                                <div class="rating">
+                                <div class="rating" role="img" aria-label="4.7 out of 5 stars">
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -364,6 +381,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Screen Reader Only Text -->
+    <span class="sr-only" id="sr-announcement"></span>
 
     <script src="script.js"></script>
 </body>
